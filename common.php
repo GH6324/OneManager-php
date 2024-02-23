@@ -2809,18 +2809,6 @@ function render_list($path = '', $files = []) {
         //if (strlen($diskname)>15) $diskname = substr($diskname, 0, 12).'...';
         while (strpos($html, '<!--DiskNameNow-->')) $html = str_replace('<!--DiskNameNow-->', $diskname, $html);
 
-        // 清除换行
-        //while (strpos($html, "\r\n\r\n")) $html = str_replace("\r\n\r\n", "\r\n", $html);
-        //while (strpos($html, "\r\r")) $html = str_replace("\r\r", "\r", $html);
-        //while (strpos($html, "\n\n")) $html = str_replace("\n\n", "\n", $html);
-        //while (strpos($html, PHP_EOL.PHP_EOL)) $html = str_replace(PHP_EOL.PHP_EOL, PHP_EOL, $html);
-        while (preg_match("/\n( *)\n/", $html)) $html = preg_replace("/\n( *)\n/", "\n", $html);
-
-        headandfoot($html, "Headomf", $path, $files, "head.omf", "globalHeadOmfUrl");
-        headandfoot($html, "Headmd", $path, $files, "head.md", "globalHeadMdUrl");
-        headandfoot($html, "Readmemd", $path, $files, "readme.md", "globalReadmeMdUrl");
-        headandfoot($html, "Footomf", $path, $files, "foot.omf", "globalFootOmfUrl");
-
         $tmp = splitfirst($html, '<!--MdRequireStart-->');
         $html = $tmp[0];
         $tmp = splitfirst($tmp[1], '<!--MdRequireEnd-->');
@@ -2899,6 +2887,18 @@ function render_list($path = '', $files = []) {
         //$ip2city = json_decode(curl('GET', 'http://ip.taobao.com/outGetIpInfo?ip=' . $_SERVER['REMOTE_ADDR'] . '&accessKey=alibaba-inc')['body'], true);
         //if ($ip2city['code']===0) $city = ' ' . $ip2city['data']['city'];
         $html = str_replace('<!--FootStr-->', date("Y-m-d H:i:s") . " " . getconstStr('Week')[date("w")] . " " . $_SERVER['REMOTE_ADDR'] . $city . ' Runningtime:' . $exetime . 's Mem:' . size_format(memory_get_usage()), $html);
+
+        // 清除换行
+        //while (strpos($html, "\r\n\r\n")) $html = str_replace("\r\n\r\n", "\r\n", $html);
+        //while (strpos($html, "\r\r")) $html = str_replace("\r\r", "\r", $html);
+        //while (strpos($html, "\n\n")) $html = str_replace("\n\n", "\n", $html);
+        //while (strpos($html, PHP_EOL.PHP_EOL)) $html = str_replace(PHP_EOL.PHP_EOL, PHP_EOL, $html);
+        while (preg_match("/\n( *)\n/", $html)) $html = preg_replace("/\n( *)\n/", "\n", $html);
+
+        headandfoot($html, "Headomf", $path, $files, "head.omf", "globalHeadOmfUrl");
+        headandfoot($html, "Headmd", $path, $files, "head.md", "globalHeadMdUrl");
+        headandfoot($html, "Readmemd", $path, $files, "readme.md", "globalReadmeMdUrl");
+        headandfoot($html, "Footomf", $path, $files, "foot.omf", "globalFootOmfUrl");
     }
 
     /*if ($_SERVER['admin']||!getConfig('disableChangeTheme')) {
