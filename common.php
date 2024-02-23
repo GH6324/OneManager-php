@@ -1870,7 +1870,8 @@ output:
         }
         $frame .= '
         <a href="https://github.com/qkqpttgf/OneManager-php" target="_blank">Github</a>
-        <a href="https://git.hit.edu.cn/ysun/OneManager-php" target="_blank">HIT Gitlab</a><br><br>
+        <a href="https://gitee.com/qkqpttgf/OneManager-php" target="_blank">Gitee</a>
+        <!--a href="https://git.hit.edu.cn/ysun/OneManager-php" target="_blank">HIT Gitlab</a--><br><br>
 ';
         if (!$canOneKeyUpate) {
             $frame .= '
@@ -1882,7 +1883,8 @@ output:
     Update from
     <select name="GitSource" onchange="changeGitSource(this)">
         <option value="Github" selected>Github</option>
-        <option value="HITGitlab">HIT Gitlab</option>
+        <option value="Gitee">Gitee</option>
+        <!--option value="HITGitlab">HIT Gitlab</option-->
     </select>
     <input type="text" name="auth" size="6" placeholder="auth" value="qkqpttgf">
     <input type="text" name="project" size="12" placeholder="project" value="OneManager-php">
@@ -1896,6 +1898,7 @@ output:
 <script>
     function changeGitSource(d) {
         if (d.options[d.options.selectedIndex].value=="Github") document.updateform.auth.value = "qkqpttgf";
+        if (d.options[d.options.selectedIndex].value=="Gitee") document.updateform.auth.value = "qkqpttgf";
         if (d.options[d.options.selectedIndex].value=="HITGitlab") document.updateform.auth.value = "ysun";
         document.updateform.QueryBranchs.style.display = null;
         document.updateform.branch.options.length = 0;
@@ -1903,11 +1906,35 @@ output:
     }
     function querybranchs(b) {
         if (document.updateform.GitSource.options[document.updateform.GitSource.options.selectedIndex].value=="Github") return Githubquerybranchs(b);
+        if (document.updateform.GitSource.options[document.updateform.GitSource.options.selectedIndex].value=="Gitee") return Giteequerybranchs(b);
         if (document.updateform.GitSource.options[document.updateform.GitSource.options.selectedIndex].value=="HITGitlab") return HITquerybranchs(b);
     }
     function Githubquerybranchs(b) {
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "https://api.github.com/repos/"+document.updateform.auth.value+"/"+document.updateform.project.value+"/branches");
+        //xhr.setRequestHeader("User-Agent","qkqpttgf/OneManager");
+        xhr.onload = function(e){
+            console.log(xhr.responseText+","+xhr.status);
+            if (xhr.status==200) {
+                document.updateform.branch.options.length=0;
+                JSON.parse(xhr.responseText).forEach( function (e) {
+                    document.updateform.branch.options.add(new Option(e.name,e.name));
+                    if ("master"==e.name) document.updateform.branch.options[document.updateform.branch.options.length-1].selected = true; 
+                });
+                //document.updateform.QueryBranchs.style.display="none";
+                b.style.display="none";
+            } else {
+                alert(xhr.responseText+"\n"+xhr.status);
+            }
+        }
+        xhr.onerror = function(e){
+            alert("Network Error "+xhr.status);
+        }
+        xhr.send(null);
+    }
+    function Giteequerybranchs(b) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://gitee.com/api/v5/repos/"+document.updateform.auth.value+"/"+document.updateform.project.value+"/branches");
         //xhr.setRequestHeader("User-Agent","qkqpttgf/OneManager");
         xhr.onload = function(e){
             console.log(xhr.responseText+","+xhr.status);
