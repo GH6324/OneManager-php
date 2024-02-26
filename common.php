@@ -2541,7 +2541,7 @@ function render_list($path = '', $files = []) {
                         //$FolderListStr = str_replace('<!--FileEncodeReplaceUrl-->', encode_str_replace(path_format($_SERVER['base_disk_path'] . '/' . str_replace('&amp;', '&', $path) . '/' . $file['name'])), $FolderList);
                         $FolderListStr = str_replace('<!--FileEncodeReplaceUrl-->', encode_str_replace($file['name']), $FolderList);
                         $FolderListStr = str_replace('<!--FileId-->', $file['id'], $FolderListStr);
-                        $FolderListStr = str_replace('<!--FileEncodeReplaceName-->', str_replace('&', '&amp;', isset($file['showname']) ? $file['showname'] : $file['name']), $FolderListStr);
+                        $FolderListStr = str_replace('<!--FileEncodeReplaceName-->', str_replace('&', '&amp;', $file['showname'] ? $file['showname'] : $file['name']), $FolderListStr);
                         $FolderListStr = str_replace('<!--lastModifiedDateTime-->', time_format($file['time']), $FolderListStr);
                         $FolderListStr = str_replace('<!--size-->', size_format($file['size']), $FolderListStr);
                         replaceHtml($FolderListStr, "filenum", $filenum);
