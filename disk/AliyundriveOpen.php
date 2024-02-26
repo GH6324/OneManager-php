@@ -704,7 +704,8 @@ class AliyundriveOpen extends Aliyundrive {
                 $url = $this->my_oauth_url;
                 $tmp = no_return_curl('GET', $url . "test");
                 if ($tmp['stat'] == 0) {
-                    $this->error = "授权服务器连接失败";
+                    $tmp['body']="授权服务器连接失败，请稍后再试";
+                    $this->error = $tmp;
                     return false;
                 }
             }
