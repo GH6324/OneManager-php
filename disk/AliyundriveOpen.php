@@ -507,7 +507,7 @@ class AliyundriveOpen extends Aliyundrive {
                     $tmp = curl('POST', $this->my_oauth_url . 'access_token',  json_encode($data), ["Content-type" => "application/json"]);
                 } else {
                     $title = getconstStr('Wait');
-                    $html = '<button onclick="this.style.disabled = 1; location.href = location.href;">' . getconstStr('Refresh') . '</button>';
+                    $html = '授权服务器可能还在启动，请稍等几秒后点击' . getconstStr('Refresh') . '按钮<br><button onclick="this.style.disabled = 1; location.href = location.href;">' . getconstStr('Refresh') . '</button>';
                     return message($html, $title, 400);
                 }
             }
