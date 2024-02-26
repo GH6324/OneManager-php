@@ -367,7 +367,10 @@ function main($path) {
     // Show disks in root
     if ($files['showname'] == 'root') return render_list($path, $files);
 
-    if (!driveisfine($_SERVER['disktag'], $drive)) return render_list();
+    if (!driveisfine($_SERVER['disktag'], $drive)) {
+        if ($drive->error['stat'] == 429) return output($drive->error['body'], 429, ['Retry-After' => 10]);
+        else return render_list();
+    }
 
     $_SERVER['ishidden'] = passhidden($path);
     if (isset($_GET['thumbnails'])) {
@@ -2274,9 +2277,6 @@ function render_list($path = '', $files = []) {
     global $exts;
     global $constStr;
     global $slash;
-    global $drive;
-
-    if ($drive->error) return output($drive->error['stat'] . "<br>" . $drive->error['body'], 429, ['Retry-After' => 10]);
 
     if (isset($files['list']['index.html']) && !$_SERVER['admin']) {
         $htmlcontent = get_content(path_format($path . '/index.html'))['content'];
